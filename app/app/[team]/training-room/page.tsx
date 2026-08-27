@@ -856,7 +856,7 @@ function TrainingCenterContent() {
                     {showCoachSwitcher && (
                       <div
                         className="absolute right-0 top-[38px] z-50 flex flex-col gap-1 p-2"
-                        style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 2, minWidth: 210, boxShadow: "0 2px 14px rgba(35,31,32,0.14)" }}
+                        style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 14, minWidth: 210, boxShadow: "0 2px 14px rgba(35,31,32,0.14)" }}
                       >
                         {COACHES.filter((c) => c.type !== selectedCoach.type).map((coach) => {
                           const hasHistory = !!messagesByCoach[coach.type]?.length;
@@ -927,7 +927,7 @@ function TrainingCenterContent() {
                       </div>
                     ) : (
                       /* The coach types on the deck */
-                      <div style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 2, padding: "14px 18px 18px" }}>
+                      <div style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "14px 18px 18px" }}>
                         <div className="slug flex items-baseline gap-[6px] mb-3 pb-[8px]" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
                           <span style={{ color: RED }}>{selectedCoach.name}</span>
                           <span style={{ color: MUTED }}>&middot; Round {round}</span>
@@ -947,7 +947,7 @@ function TrainingCenterContent() {
                     ref={streamingStartRef}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 2, padding: "14px 18px 18px" }}
+                    style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "14px 18px 18px" }}
                   >
                     <div className="slug flex items-baseline gap-[6px] mb-3 pb-[8px]" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
                       <span style={{ color: RED }}>{selectedCoach.name}</span>
@@ -1028,7 +1028,7 @@ function TrainingCenterContent() {
               placeholder="Respond to the coach..."
               disabled={isStreaming || !selectedCoach}
               className="flex-1 font-sans text-[14px] outline-none disabled:opacity-50 transition-colors px-4 py-3"
-              style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE_STRONG}`, borderRadius: 4, color: INK }}
+              style={{ background: "#FFFFFF", border: `1px solid ${HAIRLINE_STRONG}`, borderRadius: 14, color: INK }}
             />
             <button
               onClick={() => handleSendMessage()}
@@ -1095,7 +1095,7 @@ function TrainingCenterContent() {
                     background: "#FFFFFF",
                     border: `1px solid ${HAIRLINE}`,
                     borderLeft: `3px solid ${coach.color}`,
-                    borderRadius: 2,
+                    borderRadius: 14
                   }}
                 >
                   <img src={coach.avatar} alt={coach.name} width={104} height={104} className="w-[104px] h-[104px] flex-shrink-0" />

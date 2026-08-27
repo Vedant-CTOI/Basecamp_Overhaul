@@ -35,19 +35,19 @@ interface ModalTheme {
 
 function makeModalTheme(color: string): ModalTheme {
   return {
-    bg: "#FFFFFF",
-    text: BRAND.colors.ink,
-    labelColor: BRAND.colors.ink,
-    inputBg: "rgba(35,31,32,0.03)",
-    inputBorder: "rgba(35,31,32,0.2)",
-    inputFocusBorder: color,
-    inputText: BRAND.colors.ink,
-    inputPlaceholder: "#8A8689",
-    overlayBg: "rgba(20,19,22,0.55)",
+    bg: "var(--card, #FBF8F3)",
+    text: "#2C2419",
+    labelColor: "#2C2419",
+    inputBg: "#F3EEE7",
+    inputBorder: "rgba(107,93,74,0.18)",
+    inputFocusBorder: "#B78938",
+    inputText: "#2C2419",
+    inputPlaceholder: "#A79780",
+    overlayBg: "rgba(107,93,74,0.3)",
     cancelBg: "transparent",
-    cancelBorder: "rgba(35,31,32,0.35)",
-    cancelText: BRAND.colors.ink,
-    submitBg: BRAND.colors.primary,
+    cancelBorder: "rgba(107,93,74,0.35)",
+    cancelText: "#2C2419",
+    submitBg: "linear-gradient(135deg,#002663,#0A3478)",
     submitText: "#fff",
   };
 }
@@ -189,7 +189,9 @@ export default function AddIdeaModal({ teamId, teamSlug, category, onClose, onSu
         className="dove-modal relative w-full p-8"
         style={{
           background: theme.bg,
-          border: "1px solid rgba(35,31,32,0.14)",
+          border: "1px solid rgba(107,93,74,0.14)",
+          borderRadius: 28,
+          boxShadow: "0 30px 80px rgba(107,93,74,0.35), var(--neo-raised-sm)",
           maxWidth: showFramework ? "44rem" : "28rem",
           transition: "max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
@@ -225,11 +227,13 @@ export default function AddIdeaModal({ teamId, teamSlug, category, onClose, onSu
               onKeyDown={handleKeyDown}
               placeholder="What's the idea? One honest sentence is enough to start."
               rows={3}
-              className="w-full px-5 py-4 text-[19px] leading-[1.5] focus:outline-none resize-none transition-colors"
+              className="w-full px-5 py-4 text-[19px] leading-[1.5] focus:outline-none resize-none transition-all"
               style={{
                 background: theme.inputBg,
                 border: `1px solid ${theme.inputBorder}`,
                 color: theme.inputText,
+                borderRadius: 16,
+                boxShadow: "var(--neo-inset-sm)",
               }}
               autoFocus
             />
@@ -256,11 +260,13 @@ export default function AddIdeaModal({ teamId, teamSlug, category, onClose, onSu
                 handleKeyDown(e);
               }}
               placeholder="A working name is fine — better names come later."
-              className="w-full px-5 py-3.5 text-[17px] focus:outline-none transition-colors"
+              className="w-full px-5 py-3.5 text-[17px] focus:outline-none transition-all"
               style={{
                 background: theme.inputBg,
                 border: `1px solid ${theme.inputBorder}`,
                 color: theme.inputText,
+                borderRadius: 14,
+                boxShadow: "var(--neo-inset-sm)",
               }}
             />
           </div>
@@ -332,7 +338,8 @@ export default function AddIdeaModal({ teamId, teamSlug, category, onClose, onSu
         <div className="flex gap-3 mt-8">
           <button
             onClick={onClose}
-            className="dove-modal-cancel flex-1 font-bold text-[13px] uppercase tracking-[1.5px] py-3.5 cursor-pointer"
+            className="soft-btn flex-1 font-bold text-[13px] uppercase tracking-[1.5px] py-3.5"
+            style={{ color: "#6B5D4A" }}
           >
             Cancel
           </button>

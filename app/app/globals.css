@@ -812,3 +812,25 @@ h1, h2, h3, h4, h5, h6 {
 .overhaul-page [style*="rgba(255,255,255,0.2)"] {
   border-color: rgba(107,93,74,0.25) !important;
 }
+
+/* ── Overhaul modal overrides (soft language) ──────────────── */
+.overhaul-page .dove-modal,
+.dove-modal {
+  border-radius: 28px;
+  border: 1px solid rgba(107,93,74,0.14);
+  box-shadow: 0 30px 80px rgba(107,93,74,0.35), var(--neo-raised-sm);
+}
+.dove-modal::after {
+  background: linear-gradient(90deg, #B78938, #DABF80 55%, rgba(218,191,128,0.1));
+  opacity: 0.8;
+}
+.overhaul-page .dove-modal-panel {
+  border-radius: 24px;
+  border: 1px solid rgba(107,93,74,0.14);
+  box-shadow: 0 30px 80px rgba(107,93,74,0.3), var(--neo-raised-sm);
+}
+.overhaul-page .dove-modal input,
+.overhaul-page .dove-modal textarea {
+  border-radius: 14px;
+  box-shadow: var(--neo-inset-sm);
+}

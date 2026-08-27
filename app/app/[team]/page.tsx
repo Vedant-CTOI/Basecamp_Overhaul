@@ -704,13 +704,11 @@ export default function FieldPage() {
               under 2.5:1 as tracked caps on white. */}
           <button
             onClick={() => setShowTeamMenu((v) => !v)}
-            className="px-3 py-1.5 rounded font-bold text-[12px] tracking-[2px] uppercase cursor-pointer bg-transparent transition-all duration-200 hover:scale-105"
-            style={{
-              border: `2px solid ${config.color}`,
-              color: paperType(config.color),
-            }}
+            className="soft-btn"
+            style={{ padding: "8px 18px", fontSize: 11, color: "#2C2419", fontWeight: 800 }}
           >
-            {GROUPS[teamSlug as keyof typeof GROUPS]?.name || config.name} ▾
+            {GROUPS[teamSlug as keyof typeof GROUPS]?.name || config.name}
+            <span style={{ marginLeft: 8, color: "#B78938" }}>{showTeamMenu ? "▴" : "▾"}</span>
           </button>
           {/* The page name, and the rule that introduces it, are what
               the phone gives up. Below 599px there is no measure for a
@@ -735,21 +733,20 @@ export default function FieldPage() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   className="fixed inset-0 z-[200]"
-                  style={{ background: "rgba(35,31,32,0.25)" }}
+                  style={{ background: "rgba(107,93,74,0.18)" }}
                   onClick={() => setShowTeamMenu(false)}
                 />
                 <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute left-0 top-full mt-2 z-[201] overflow-hidden"
+                  initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: [0.65, 0, 0.35, 1] }}
+                  className="absolute left-0 top-full mt-3 z-[201] overflow-hidden"
                   style={{
-                    background: "#FFFFFF",
-                    border: `1px solid ${HAIRLINE}`,
-                    borderRadius: 6,
-                    width: 260,
-                    boxShadow: "0 24px 64px rgba(35,31,32,0.2)",
+                    background: "var(--card)",
+                    borderRadius: 20,
+                    width: 280,
+                    boxShadow: "0 24px 64px rgba(166,146,116,0.35), var(--neo-raised-sm)",
                   }}
                 >
                   {Object.values(GROUPS).map((group, i) => (
@@ -761,8 +758,8 @@ export default function FieldPage() {
                       onClick={() => { router.push(`/${group.slug}`); setShowTeamMenu(false); }}
                       className="w-full flex items-center gap-3 px-5 py-[16px] text-left cursor-pointer bg-transparent border-none relative overflow-hidden transition-all duration-200 group"
                       style={{
-                        borderBottom: i < Object.values(GROUPS).length - 1 ? `1px solid ${HAIRLINE}` : "none",
-                        background: group.slug === teamSlug ? `${group.color}14` : "transparent",
+                        borderBottom: i < Object.values(GROUPS).length - 1 ? "1px solid rgba(107,93,74,0.12)" : "none",
+                        background: group.slug === teamSlug ? `${group.color}12` : "transparent",
                       }}
                       onMouseEnter={(e) => { if (group.slug !== teamSlug) e.currentTarget.style.background = `${group.color}14`; }}
                       onMouseLeave={(e) => { if (group.slug !== teamSlug) e.currentTarget.style.background = "transparent"; }}

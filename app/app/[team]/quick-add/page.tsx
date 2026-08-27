@@ -580,7 +580,7 @@ export default function QuickAddPage() {
                       <div className="flex flex-col items-center gap-3">
                         <div
                           className="font-sans font-[900] text-[22px] tracking-[4px] uppercase px-4 py-1"
-                          style={{ color: RED, border: `3px solid ${RED}`, borderRadius: 2, transform: "rotate(-3deg)" }}
+                          style={{ color: RED, border: `3px solid ${RED}`, borderRadius: 14, transform: "rotate(-3deg)" }}
                         >
                           ADDED
                         </div>

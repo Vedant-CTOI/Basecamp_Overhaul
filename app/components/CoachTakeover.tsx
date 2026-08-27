@@ -731,7 +731,7 @@ export default function CoachTakeover({
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.2, ease: EASE }}
                         className="absolute right-0 top-[42px] z-50 overflow-hidden"
-                        style={{ transformOrigin: "top right", background: "#262529", border: HAIRLINE, borderRadius: 2, width: 260 }}
+                        style={{ transformOrigin: "top right", background: "#262529", border: HAIRLINE, borderRadius: 14, width: 260 }}
                       >
                         {COACH_LIST.filter((c) => c.type !== coach).map((c, i, arr) => {
                           const hasHistory = !!linesByCoach[c.type]?.length;
@@ -969,7 +969,7 @@ function ExchangeLine({ line, fallbackCoach, arriving }: { line: Line; fallbackC
  *  here — it is animated, and a shorthand would fight the animation. */
 const PAGE_FRAME: React.CSSProperties = {
   color: "#E6E4E5",
-  borderRadius: 2,
+  borderRadius: 14,
   borderStyle: "solid",
   borderWidth: "1px 1px 1px 3px",
   borderTopColor: PAGE_EDGE,

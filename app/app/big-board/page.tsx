@@ -592,7 +592,7 @@ export default function BigBoardPage() {
                 transformOrigin: "top right",
                 background: BRAND.colors.surface2,
                 border: HAIRLINE,
-                borderRadius: 2,
+                borderRadius: 14,
                 width: 260,
               }}
             >
