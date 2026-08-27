@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Select — Motion Studies</title>
+<style>
+@font-face{
+  font-family:'Ogilvy Serif';
+  src:url('/fonts/OgilvySerifWeb-Regular.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#141316}
+body{
+  color:#fff;
+  font-family:'Ogilvy Serif',Georgia,'Times New Roman',serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+p,h1,h2{text-wrap:pretty}
+h1,h2{text-wrap:balance}
+
+/* ---- sanctioned atmosphere: the only ambient motion on the page ---- */
+.atmosphere{
+  position:fixed;inset:-25%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(55% 45% at 28% 22%, rgba(235,63,67,.11), transparent 62%),
+    radial-gradient(45% 40% at 76% 78%, rgba(218,41,28,.075), transparent 60%);
+  animation:drift 28s ease-in-out infinite alternate;
+}
+@keyframes drift{to{transform:translate3d(4%,-3%,0) scale(1.07)}}
+
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:72px 32px 90px}
+
+/* ---- header ---- */
+.head h1{font-size:30px;font-weight:400;letter-spacing:.01em}
+.head h1 em{font-style:italic}
+.head .sub{margin-top:12px;font-style:italic;font-size:15.5px;line-height:1.55;color:rgba(255,255,255,.6);max-width:64ch}
+
+/* ---- study sections ---- */
+.study{margin-top:80px;padding-top:52px;border-top:1px solid rgba(255,255,255,.08)}
+.eyebrow{display:flex;align-items:baseline;gap:14px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#EB3F43}
+.eyebrow .num{opacity:.7}
+.intent{margin-top:12px;font-style:italic;font-size:16px;line-height:1.55;color:rgba(255,255,255,.66);max-width:66ch}
+.mock{margin-top:28px}
+
+.stage{
+  position:relative;height:420px;overflow:hidden;border-radius:10px;
+  background:radial-gradient(90% 90% at 50% 28%, #1a191d 0%, #141316 62%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+
+/* ---- coins ---- */
+.coin{
+  position:absolute;left:50%;top:45%;width:280px;height:280px;
+  margin:-140px 0 0 -140px;border-radius:50%;overflow:hidden;cursor:pointer;
+  isolation:isolate;
+  transform:translateX(0) scale(1);
+  transition:transform .5s cubic-bezier(.16,1,.3,1), filter .5s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 26px 60px rgba(0,0,0,.5);
+  will-change:transform,filter;
+}
+.coin::after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);pointer-events:none;z-index:6}
+.coin .media{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(1)}
+.coin .tint{position:absolute;inset:0;mix-blend-mode:color}
+.coin .shade{position:absolute;inset:0;background:
+  radial-gradient(85% 85% at 50% 32%, transparent 42%, rgba(0,0,0,.5) 100%),
+  linear-gradient(to top, rgba(0,0,0,.68), transparent 48%)}
+.coin .label{position:absolute;left:10px;right:10px;bottom:38px;text-align:center;z-index:2;transition:opacity .3s}
+.coin .team{font-size:23px;letter-spacing:.02em}
+.coin .platform{margin-top:5px;font-style:italic;font-size:14px;color:rgba(255,255,255,.85)}
+.coin.center{z-index:3}
+.coin.left{transform:translateX(-252px) scale(.58);filter:brightness(.4);z-index:2}
+.coin.right{transform:translateX(252px) scale(.58);filter:brightness(.4);z-index:2}
+
+/* ---- CTA + slug ---- */
+.cta-row{display:flex;justify-content:center;margin-top:22px}
+.cta{display:inline-block;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:10px 28px;font-size:15px;letter-spacing:.03em;color:#fff;cursor:default}
+.slug{margin-top:15px;text-align:center;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:11px;letter-spacing:.32em;color:rgba(255,255,255,.42)}
+.slug .to{color:#EB3F43}
+.slug.stamp{animation:stamp .28s cubic-bezier(.16,1,.3,1)}
+@keyframes stamp{0%{opacity:0;transform:translateY(3px)}100%{opacity:1;transform:none}}
+
+/* ---- 01 THE REEL ---- */
+@keyframes reelFlicker{
+  0%{filter:brightness(1.55) contrast(1.15)}
+  35%{filter:brightness(.72)}
+  65%{filter:brightness(1.28)}
+  100%{filter:brightness(1)}
+}
+.s-reel .coin.center.flicker{animation:reelFlicker .12s linear 1}
+
+/* ---- 02 THE SPOTLIGHT ---- */
+.s-spot .coin{transition-duration:.7s}
+.s-spot .coin.left,.s-spot .coin.right{filter:brightness(.2)}
+.s-spot .light{
+  position:absolute;left:50%;top:38%;width:640px;height:640px;margin:-320px 0 0 -320px;
+  border-radius:50%;pointer-events:none;z-index:4;mix-blend-mode:screen;
+  background:radial-gradient(circle, rgba(255,150,90,.30) 0%, rgba(235,63,67,.13) 42%, transparent 68%);
+}
+.s-spot .light.sweep{animation:lightSweep 1.15s cubic-bezier(.45,.08,.25,1) 1}
+@keyframes lightSweep{
+  0%{transform:translateX(0)}
+  26%{transform:translateX(-120px)}
+  64%{transform:translateX(150px)}
+  100%{transform:translateX(0)}
+}
+.s-spot .reflection{
+  position:absolute;left:50%;top:calc(45% + 152px);width:320px;height:64px;margin-left:-160px;
+  border-radius:50%;pointer-events:none;z-index:1;filter:blur(12px);opacity:.55;
+  transition:opacity .7s;
+  background:radial-gradient(50% 50% at 50% 50%, var(--rc, rgba(255,255,255,.3)), transparent 72%);
+  transform:scaleY(.8);
+}
+
+/* ---- 03 THE WAKE ---- */
+.s-wake .ambient{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1)}
+.s-wake .ambient.on{opacity:.4}
+.s-wake .wave{
+  position:absolute;left:50%;top:45%;width:120px;height:120px;margin:-60px 0 0 -60px;
+  border-radius:50%;pointer-events:none;
+  animation:wakeRipple .8s cubic-bezier(.22,.75,.3,1) 1 forwards;
+}
+@keyframes wakeRipple{
+  0%{transform:scale(.35);opacity:.8}
+  100%{transform:scale(11);opacity:0}
+}
+
+/* ---- 04 THE PROJECTIONIST ---- */
+@keyframes kenburns{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.055) translate(1.4%,-1%)}
+  100%{transform:scale(1)}
+}
+@keyframes projFlicker{
+  0%,100%{filter:brightness(1)}
+  6%{filter:brightness(1.14)}
+  11%{filter:brightness(.94)}
+  18%{filter:brightness(1.07)}
+  26%{filter:brightness(.985)}
+  52%{filter:brightness(1.05)}
+  78%{filter:brightness(.97)}
+}
+.s-proj .coin.center.breath .media{animation:kenburns 2s cubic-bezier(.45,.05,.55,.95) 1}
+.s-proj .coin.center.breath{animation:projFlicker 2s linear 1}
+.s-proj .kruger{
+  position:absolute;left:-4%;right:-4%;bottom:13%;height:46px;background:#EB3F43;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  transform:translateX(-108%);
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.s-proj .kruger span{font-style:italic;font-size:16.5px;white-space:nowrap;letter-spacing:.01em;color:#fff}
+.s-proj .coin.center:hover .kruger{transform:translateX(0)}
+.s-proj .coin.center:hover .label{opacity:0}
+
+/* ---- footnote ---- */
+.footnote{margin-top:88px;padding-top:36px;border-top:1px solid rgba(255,255,255,.08);text-align:center;font-style:italic;font-size:15px;color:rgba(255,255,255,.55)}
+</style>
+</head>
+<body>
+<div class="atmosphere"></div>
+<div class="wrap">
+
+  <header class="head">
+    <h1>Team Select — four motion studies</h1>
+    <p class="sub">Same stage, four ways it can move. Each mock is live — it loops on its own or answers a click. Red is the platform's voice; motion is an event, never a texture.</p>
+  </header>
+
+  <section class="study s-reel">
+    <div class="eyebrow"><span class="num">01</span><span class="name">The Reel</span></div>
+    <p class="intent">The drum advances like a film reel — one crisp 500ms swap, a single frame of flicker on the incoming coin, and a counter stamp under the stage.</p>
+    <div class="mock">
+      <div class="stage"></div>
+      <div class="cta-row"><span class="cta">Take the floor&nbsp;→</span></div>
+      <div class="slug">01/03</div>
+    </div>
+  </section>
+
+  <section class="study s-spot">
+    <div class="eyebrow"><span class="num">02</span><span class="name">The Spotlight</span></div>
+    <p class="intent">A warm stage light swings across the room to meet the incoming coin, which casts a soft floor reflection while the wings fall into deeper shadow.</p>
+    <div class="mock">
+      <div class="stage"></div>
+      <div class="cta-row"><span class="cta">Take the floor&nbsp;→</span></div>
+    </div>
+  </section>
+
+  <section class="study s-wake">
+    <div class="eyebrow"><span class="num">03</span><span class="name">The Wake</span></div>
+    <p class="intent">Choosing a team colors the room — the team's hue ripples out from the coin for a beat, then settles into the atmosphere until the next change.</p>
+    <div class="mock">
+      <div class="stage"></div>
+      <div class="cta-row"><span class="cta">Take the floor&nbsp;→</span></div>
+    </div>
+  </section>
+
+  <section class="study s-proj">
+    <div class="eyebrow"><span class="num">04</span><span class="name">The Projectionist</span></div>
+    <p class="intent">The film holds still, then takes a two-second breath every eight seconds and freezes again; hover the focused coin and its platform line sets in a red Kruger bar along the bottom edge.</p>
+    <div class="mock">
+      <div class="stage"></div>
+      <div class="cta-row"><span class="cta">Take the floor&nbsp;→</span></div>
+    </div>
+  </section>
+
+  <p class="footnote">Directions can combine — e.g. Spotlight&nbsp;+&nbsp;Projectionist.</p>
+
+</div>
+
+<script>
+const TEAMS = [
+  { team:'Group One',   platform:'Sell or Else',                  color:'#24298F', glow:'rgba(64,72,214,0.55)',   img:'/video/teams/group-1.jpg' },
+  { team:'Group Two',   platform:'The Well-Informed Unconscious', color:'#DA291C', glow:'rgba(218,41,28,0.5)',    img:'/video/teams/group-2.jpg' },
+  { team:'Group Three', platform:'The Red Thread',                color:'#2A282C', glow:'rgba(168,162,172,0.4)',  img:'/video/teams/group-3.jpg' },
+];
+
+function coinEl(t, withKruger){
+  const c = document.createElement('div');
+  c.className = 'coin';
+  c.innerHTML = `
+    <div class="media" style="background-image:url('${t.img}'),repeating-linear-gradient(112deg,rgba(255,255,255,.06) 0 3px,transparent 3px 14px),radial-gradient(120% 120% at 32% 26%,#4d4b52 0%,#232126 72%)"></div>
+    <div class="tint" style="background:${t.color}"></div>
+    <div class="shade"></div>
+    <div class="label"><div class="team">${t.team}</div><div class="platform">${t.platform}</div></div>
+    ${withKruger ? `<div class="kruger"><span>${t.platform}</span></div>` : ''}`;
+  return c;
+}
+
+function makeCarousel(section, opts = {}){
+  const stage = section.querySelector('.stage');
+  const coins = TEAMS.map(t => coinEl(t, opts.kruger));
+  coins.forEach(c => stage.appendChild(c));
+  let focus = 0, timer = null;
+  const slot = i => { const d = (i - focus + 3) % 3; return d === 0 ? 'center' : d === 1 ? 'right' : 'left'; };
+  function apply(){
+    coins.forEach((c, i) => { c.classList.remove('center','left','right'); c.classList.add(slot(i)); });
+  }
+  function go(i, manual){
+    if (i === focus) return;
+    const prev = focus; focus = i; apply();
+    opts.onAdvance && opts.onAdvance({ focus, prev, coin: coins[focus], team: TEAMS[focus], stage });
+    if (manual) start();
+  }
+  function start(){
+    clearInterval(timer);
+    if (opts.interval) timer = setInterval(() => go((focus + 1) % 3, false), opts.interval);
+  }
+  coins.forEach((c, i) => c.addEventListener('click', () => go(i, true)));
+  apply(); start();
+  return { stage, coins, go, get focus(){ return focus; } };
+}
+
+/* ---- 01 THE REEL ---- */
+(function(){
+  const sec = document.querySelector('.s-reel');
+  const slug = sec.querySelector('.slug');
+  const pad = n => String(n + 1).padStart(2, '0');
+  let settle = null;
+  makeCarousel(sec, { interval: 4000, onAdvance: ({ focus, prev, coin }) => {
+    // film flicker as the incoming coin lands
+    setTimeout(() => {
+      coin.classList.remove('flicker'); void coin.offsetWidth; coin.classList.add('flicker');
+      coin.addEventListener('animationend', () => coin.classList.remove('flicker'), { once: true });
+    }, 360);
+    // frame-counter stamp
+    clearTimeout(settle);
+    slug.innerHTML = `${pad(prev)}/03 <span class="to">&rarr;</span> ${pad(focus)}/03`;
+    slug.classList.remove('stamp'); void slug.offsetWidth; slug.classList.add('stamp');
+    settle = setTimeout(() => { slug.textContent = `${pad(focus)}/03`; }, 1100);
+  }});
+})();
+
+/* ---- 02 THE SPOTLIGHT ---- */
+(function(){
+  const sec = document.querySelector('.s-spot');
+  const light = document.createElement('div'); light.className = 'light';
+  const refl  = document.createElement('div'); refl.className = 'reflection';
+  makeCarousel(sec, { interval: 4200, onAdvance: ({ team }) => {
+    light.classList.remove('sweep'); void light.offsetWidth; light.classList.add('sweep');
+    refl.style.setProperty('--rc', team.glow);
+  }});
+  refl.style.setProperty('--rc', TEAMS[0].glow);
+  sec.querySelector('.stage').append(refl, light);
+})();
+
+/* ---- 03 THE WAKE ---- */
+(function(){
+  const sec = document.querySelector('.s-wake');
+  const stage = sec.querySelector('.stage');
+  const layers = [document.createElement('div'), document.createElement('div')];
+  layers.forEach(l => { l.className = 'ambient'; stage.prepend(l); });
+  let active = 0;
+  function setAmbient(team){
+    const next = layers[1 - active];
+    next.style.background = `radial-gradient(75% 65% at 50% 45%, ${team.glow}, transparent 70%)`;
+    next.classList.add('on');
+    layers[active].classList.remove('on');
+    active = 1 - active;
+  }
+  setAmbient(TEAMS[0]);
+  makeCarousel(sec, { interval: 4000, onAdvance: ({ team }) => {
+    const w = document.createElement('div'); w.className = 'wave';
+    w.style.background = `radial-gradient(circle, ${team.glow} 0%, transparent 62%)`;
+    stage.appendChild(w);
+    setTimeout(() => w.remove(), 850);
+    setAmbient(team);
+  }});
+})();
+
+/* ---- 04 THE PROJECTIONIST ---- */
+(function(){
+  const sec = document.querySelector('.s-proj');
+  const api = makeCarousel(sec, { kruger: true });
+  function breath(){
+    const c = api.coins[api.focus];
+    c.classList.add('breath');
+    c.querySelector('.media').addEventListener('animationend', () => c.classList.remove('breath'), { once: true });
+  }
+  setTimeout(breath, 1400);
+  setInterval(breath, 8000);
+})();
+</script>
+</body>
+</html>

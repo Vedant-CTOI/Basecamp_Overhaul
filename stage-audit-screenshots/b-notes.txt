@@ -1,0 +1,119 @@
+SHOT b-01-cold-load.png
+STRIP: "NEW CRAFT\n· HATHAWAY\nPRESENTING\n→ Rotate the teams, then open the ballot\nNEXT TEAM\nOPEN THE BALLOT →\nSHOW THE RETURNS"
+SHOT board-tab2
+board: brought The Craft Vault to the Stage
+SHOT b-03-realtime-new-stage-card.png
+REALTIME staged: true
+
+--- CARDS (after realtime stage-in (mixed row)) ---
+{"title":"The Overnight Agency","span":"col-span-2","cellH":180,"cardH":180,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":null}
+{"title":"The Craft Vault","span":"col-span-2","cellH":282,"cardH":282,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":null}
+{"title":"Do the Homework Engine","span":"col-span-3","cellH":282,"cardH":282,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":{"ratio":1.778,"fit":"cover"}}
+{"title":"One Agency, One Face","span":"col-span-3","cellH":283,"cardH":283,"gapBelow":0,"border":"rgb(235, 63, 67) 2px","img":{"ratio":1.778,"fit":"cover"}}
+stage2: shortlisted a card
+SHOT b-04-realtime-shortlist-border.png
+
+--- CARDS (after realtime shortlist) ---
+{"title":"The Overnight Agency","span":"col-span-2","cellH":180,"cardH":180,"gapBelow":0,"border":"rgb(235, 63, 67) 2px","img":null}
+{"title":"The Craft Vault","span":"col-span-2","cellH":282,"cardH":282,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":null}
+{"title":"Do the Homework Engine","span":"col-span-3","cellH":282,"cardH":282,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":{"ratio":1.778,"fit":"cover"}}
+{"title":"One Agency, One Face","span":"col-span-3","cellH":283,"cardH":283,"gapBelow":0,"border":"rgb(235, 63, 67) 2px","img":{"ratio":1.778,"fit":"cover"}}
+board3: chose a different frame
+SHOT b-05-realtime-frame-swap.png
+SHOT b-06-spotlight-team-2.png
+SHOT b-07-next-team.png
+SHOT b-08-spread-printed.png
+SPREAD: {"cardWH":[1420,762],"viewport":[1600,1000],"overflowsViewport":false,"slugRow":{"scrollW":482,"clientW":482,"clipped":false,"text":"03 NEW CRAFT ▾"},"barH":73,"barWraps":false,"printRatio":1.778,"actions":["NEW CRAFT ▾","×","Done","★ On the Stage","Set aside","★ Shortlist","Touffou ▾","Kill"]}
+SHOT b-09-photo-box.png
+ESC in photo box closed only the box (card still open): true
+SHOT b-10-after-esc-photobox.png
+SHOT b-11-category2-presenting.png
+
+--- CARDS (category 2 presenting) ---
+{"title":"The First-Party Feelings Desk","span":"col-span-2","cellH":180,"cardH":180,"gapBelow":0,"border":"rgb(235, 63, 67) 2px","img":null}
+{"title":"The Category Almanac","span":"col-span-2","cellH":196,"cardH":196,"gapBelow":0,"border":"rgb(235, 63, 67) 2px","img":null}
+{"title":"Clients in the Room","span":"col-span-2","cellH":180,"cardH":180,"gapBelow":0,"border":"rgba(255, 255, 255, 0.14) 1px","img":null}
+SHOT b-12-spread-sheet-awaiting.png
+SHEET SPREAD: {"cardWH":[1420,759],"viewport":[1600,1000],"overflowsViewport":false,"slugRow":{"scrollW":482,"clientW":482,"clipped":false,"text":"02 CLIENT GRAVITY ▾ SHORTLISTED"},"barH":73,"barWraps":false,"printRatio":1.784,"actions":["CLIENT GRAVITY ▾","×","USE","USE","USE","Done","★ On the Stage","Remove from shortlist","Touffou ▾","Kill"]}
+SHOT b-13-sheet-frame-chosen.png
+SHOT b-14-stage-after-frame-choice.png
+SHOT b-15-ballot-open-stage.png
+SHOT vote-phone
+BALLOT HEAD: "The Ballot | CLIENT GRAVITY | 0/3 | AUTO-SAVED | The Tartan Ticket |  | An annual client summit at Touffou — small, invited, no stage, no deck over ten slides. The heritage as an experience only we can offer. |  | Th"
+BALLOT ROWS: 8 vote buttons: 6
+BALLOT COUNTER: 3/3
+SHOT vote-cast
+SHOT b-18-ballot-counter-updated.png
+STRIP (voting): "CLIENT GRAVITY\nBALLOT OPEN\n7 OF 12\n→ Close the ballot when ready\nCLOSE THE BALLOT"
+SHOT b-19-returns-landing.png
+SHOT b-20-returns-settled.png
+RETURNS: {
+ "rows": [
+  {
+   "t": "#1 | 7 | VOTES | HATHAWAY | The First-Party Feelings Desk | ",
+   "h": 233,
+   "cellH": 233,
+   "border": "rgb(235, 63, 67)",
+   "img": false
+  },
+  {
+   "t": "#2 | 5 | VOTES | TOUFFOU | The Category Almanac |  | An annu",
+   "h": 233,
+   "cellH": 233,
+   "border": "rgb(235, 63, 67)",
+   "img": true
+  },
+  {
+   "t": "#3 | 3 | VOTES | BASKERVILLE | Clients in the Room |  | End ",
+   "h": 198,
+   "cellH": 198,
+   "border": "rgba(255, 255, 255, 0.14)",
+   "img": false
+  },
+  {
+   "t": "#4 | 2 | VOTES | TOUFFOU | The Second Opinion |  | A 48-hour",
+   "h": 198,
+   "cellH": 198,
+   "border": "rgba(255, 255, 255, 0.14)",
+   "img": false
+  },
+  {
+   "t": "#5 | 1 | VOTE | HATHAWAY | The Proof Room |  | Every case we",
+   "h": 198,
+   "cellH": 198,
+   "border": "rgba(255, 255, 255, 0.14)",
+   "img": false
+  },
+  {
+   "t": "#6 | 1 | VOTE | BASKERVILLE | The Tartan Ticket |  | An annu",
+   "h": 198,
+   "cellH": 198,
+   "border": "rgba(255, 255, 255, 0.14)",
+   "img": false
+  }
+ ],
+ "marks": 1
+}
+SHOT b-21-pillar-shortlist.png
+SHORTLIST: [
+ {
+  "t": "The First-Party Feelings Desk | HATHAWAY |  | A standing off",
+  "h": 117,
+  "border": "rgb(235, 63, 67)",
+  "img": false
+ },
+ {
+  "t": "The Category Almanac | TOUFFOU |  | An annual, sold product:",
+  "h": 135,
+  "border": "rgb(235, 63, 67)",
+  "img": true
+ }
+]
+SHOT b-22-shortlist-after-demote.png
+SHOT b-23-next-category.png
+STRIP after next category: "CREATIVE CULTURE\n· HATHAWAY\nPRESENTING\n→ Rotate the teams, then open the ballot\nNEXT TEAM\nOPEN THE BALLOT →\nSHOW THE RETURNS"
+state reset (no returns view): true
+SHOT b-24-full-shortlist.png
+
+--- CONSOLE ERRORS ---
+(none)

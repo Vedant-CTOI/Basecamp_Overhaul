@@ -1,0 +1,57 @@
+# Dependencies
+app/node_modules/
+app/.next/
+app/.vercel/
+node_modules/
+.next/
+
+# Playwright
+.playwright-mcp/
+
+# Claude Code (local agent state)
+.claude/
+memory/
+
+# Dev screenshots (throwaway captures at repo root)
+/admin-*.png
+/center-court.png
+/team-select*.png
+/v[0-9]*-*.png
+/vote-*.png
+
+# Environment — never commit
+app/.env.local
+app/.env.production
+app/.env.development
+
+# Build
+app/*.tsbuildinfo
+app/next-env.d.ts
+
+# OS
+.DS_Store
+
+# Reference material (engagement-confidential, kept locally only)
+reference/
+
+# Large files and media
+*.vtt
+*.eml
+*.zip
+
+# Sensitive engagement documents — add filenames or patterns per engagement
+*-confidential.pdf
+*-NDA*.pdf
+
+# ── Regenerable capture artifacts (excluded from this repo, 2026-08-05) ──
+# ~138MB of QA and exploration captures. They are EVIDENCE, not source: every
+# doc that cites them also prints the command that rewrites them (e.g.
+# `node scripts/visual-qa-board-stage-newsroom.mjs all` → output/playwright/…),
+# so the citations still resolve to something reproducible. They remain on
+# local disk, and in the sprite-workshop repo's history of `ogilvy-generic`.
+output/
+flow-audit-screenshots/
+
+# local QA tooling manifests (root)
+/package.json
+/package-lock.json

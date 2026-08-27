@@ -1,0 +1,158 @@
+<style>
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-RegularItalic.woff2') format('woff2'); font-weight: 400; font-style: italic; }
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-Bold.woff2') format('woff2'); font-weight: 700; }
+@font-face { font-family: 'OgSans'; src: url('/fonts/OgilvySansWeb-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'OgSans'; src: url('/fonts/OgilvySansWeb-Bold.woff2') format('woff2'); font-weight: 700; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0e0d0f; color: #f4f3f2; font-family: 'OgSans', Helvetica, sans-serif; padding: 48px 32px 120px; }
+.serif { font-family: 'OgSerif', Georgia, serif; }
+.mono { font-family: 'Courier New', monospace; }
+h1.title { font-family: 'OgSerif', Georgia, serif; font-size: 34px; margin-bottom: 6px; }
+.sub { color: #8a8689; font-size: 15px; margin-bottom: 44px; max-width: 640px; line-height: 1.5; }
+.slug { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+section { margin-bottom: 56px; }
+.eyebrow { font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #EB3F43; margin-bottom: 8px; }
+.opt-title { font-family: 'OgSerif', Georgia, serif; font-size: 26px; margin-bottom: 6px; }
+.intent { color: #8a8689; font-size: 14px; margin-bottom: 20px; max-width: 720px; line-height: 1.55; }
+.stage { position: relative; height: 560px; border: 1px solid rgba(255,255,255,.1); overflow: hidden; background: #100f11; }
+.coachmono { border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-family: 'OgSerif', Georgia, serif; font-style: italic; color: #fff; }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-family: 'OgSans', sans-serif; font-weight: 700; cursor: pointer; transition: all .2s; }
+.wave { display: inline-flex; align-items: flex-end; gap: 3px; height: 15px; }
+.wave span { width: 3px; border-radius: 2px; animation: w 0.7s ease-in-out infinite; }
+@keyframes w { 0%,100% { height: 5px } 50% { height: 15px } }
+.foot { color: #6e6a6c; font-size: 14px; font-style: italic; font-family: 'OgSerif', serif; margin-top: 40px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 20px; }
+.cursor { display: inline-block; width: 8px; height: 15px; background: #231f20; vertical-align: middle; animation: blink 0.8s step-end infinite; }
+@keyframes blink { 50% { opacity: 0 } }
+</style>
+
+<h1 class="title serif">The Coaching Takeover — three directions</h1>
+<p class="sub">Same content, three ways to distribute the screen and stage the exchange. Click a coach in each to feel the interaction. The question underneath: once this is good, do we still need a separate full Coaching Room? Each direction assumes the answer is no — this <em>is</em> coaching.</p>
+
+<!-- ============ OPTION 1 — THE DESK ============ -->
+<section>
+  <div class="eyebrow">01 — The Desk</div>
+  <div class="opt-title serif">Idea pinned, conversation the hero</div>
+  <p class="intent">A 34/66 split. The idea is a small pinned reference card under a desk lamp on the left; the coaching conversation owns two-thirds of the screen. Fixes the current 42/58 where the idea hogged space it didn't earn. Room-readable exchange, idea always in view.</p>
+  <div class="stage" id="s1" style="display:flex;">
+    <div style="width:34%; background:#fff; color:#231f20; padding:36px 32px; position:relative; flex-shrink:0;">
+      <div style="position:absolute; inset:0; background:radial-gradient(ellipse 80% 45% at 50% 14%, rgba(235,63,67,.07), transparent 68%); pointer-events:none;"></div>
+      <div style="position:relative;">
+        <div class="slug" style="color:#8a8689; margin-bottom:20px;">On the desk · New Craft</div>
+        <div class="serif" style="font-size:30px; line-height:1.1; margin-bottom:16px;">The Overnight Agency</div>
+        <p style="font-size:16px; line-height:1.6; color:#4a4749;">A productized promise: brief us by six, wake to three routes with craft attached. AI drafts overnight; senior hands decide at dawn. We sell speed without selling the soul.</p>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 28px; border-bottom:1px solid rgba(255,255,255,.1);">
+        <span class="serif" id="s1h" style="font-size:22px;">Bring in a coach</span>
+        <span style="color:rgba(255,255,255,.4); font-size:22px; cursor:pointer;">×</span>
+      </div>
+      <div id="s1body" style="flex:1; padding:28px; overflow:auto;"></div>
+      <div style="display:flex; gap:10px; padding:18px 28px; border-top:1px solid rgba(255,255,255,.1);">
+        <div style="width:44px; height:44px; border:1px solid rgba(255,255,255,.25); display:grid; place-items:center; color:rgba(255,255,255,.6); font-size:17px; cursor:pointer;">◉</div>
+        <input placeholder="Respond to the coach…" style="flex:1; background:transparent; border:1px solid rgba(255,255,255,.25); color:#fff; padding:0 16px; font-family:'OgSans',sans-serif; font-size:15px;">
+        <button style="background:#EB3F43; color:#fff; border:none; padding:0 24px; font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer;">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPTION 2 — THE THREAD ============ -->
+<section>
+  <div class="eyebrow">02 — The Thread</div>
+  <div class="opt-title serif">One column, read top to bottom</div>
+  <p class="intent">No split at all. The idea is a compact brief at the top of a single centered column; the exchange flows beneath it like a transcript — coach pages and your replies stacked. The most readable and the most room-friendly: one thing, one direction, scrolls. Coaches are a quiet row you choose from once.</p>
+  <div class="stage" id="s2" style="overflow:auto;">
+    <div style="max-width:720px; margin:0 auto; padding:44px 32px 120px;">
+      <div style="border:1px solid rgba(255,255,255,.14); padding:26px 28px; margin-bottom:8px;">
+        <div class="slug" style="color:#8a8689; margin-bottom:14px;">The brief · New Craft</div>
+        <div class="serif" style="font-size:32px; line-height:1.08; margin-bottom:14px;">The Overnight Agency</div>
+        <p style="font-size:17px; line-height:1.6; color:#c9c7c8;">A productized promise: brief us by six, wake to three routes with craft attached. AI drafts overnight; senior hands decide at dawn. We sell speed without selling the soul.</p>
+      </div>
+      <div id="s2body"></div>
+    </div>
+    <div style="position:sticky; bottom:0; background:linear-gradient(transparent, #100f11 30%); padding:20px 32px; display:flex; justify-content:center;">
+      <div style="max-width:720px; width:100%; display:flex; gap:10px;">
+        <div style="width:44px; height:44px; border:1px solid rgba(255,255,255,.25); display:grid; place-items:center; color:rgba(255,255,255,.6); font-size:17px; cursor:pointer;">◉</div>
+        <input placeholder="Respond to the coach…" style="flex:1; background:#100f11; border:1px solid rgba(255,255,255,.25); color:#fff; padding:0 16px; font-family:'OgSans',sans-serif; font-size:15px;">
+        <button style="background:#EB3F43; color:#fff; border:none; padding:0 24px; font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer;">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPTION 3 — THE MARKED-UP MANUSCRIPT ============ -->
+<section>
+  <div class="eyebrow">03 — The Marked-Up Manuscript</div>
+  <div class="opt-title serif">The coach marks up your idea</div>
+  <p class="intent">The idea is a large manuscript at center; the coach's read arrives as a red-penciled note in the margin — the creative director handing your copy back. Most tied to the copy-deck metaphor and the most distinctive. The coach dock sits at the bottom. Best for a single sharp read; a long back-and-forth wants Option 1 or 2.</p>
+  <div class="stage" id="s3" style="display:flex; align-items:center; justify-content:center; padding:40px;">
+    <div style="display:flex; gap:0; align-items:stretch; max-width:900px; width:100%;">
+      <div style="background:#FDFCFB; color:#231f20; padding:40px 44px; flex:1; box-shadow:0 20px 60px rgba(0,0,0,.5);">
+        <div class="slug" style="color:#8a8689; margin-bottom:22px;">New Craft · Draft</div>
+        <div class="serif" style="font-size:36px; line-height:1.06; margin-bottom:20px;">The Overnight Agency</div>
+        <p style="font-size:18px; line-height:1.65;">A productized promise: brief us by six, wake to three routes with craft attached. AI drafts overnight; senior hands decide at dawn. We sell speed without selling the soul.</p>
+      </div>
+      <div id="s3note" style="width:280px; flex-shrink:0; background:#181719; padding:32px 28px; display:flex; flex-direction:column; justify-content:center; border-left:3px solid rgba(235,63,67,.4);">
+        <div style="color:#6e6a6c; font-size:14px; font-style:italic; font-family:'OgSerif',serif; text-align:center;">Pick a coach below —<br>their note lands here.</div>
+      </div>
+    </div>
+  </div>
+  <div id="s3dock" style="display:flex; gap:12px; justify-content:center; margin-top:16px;"></div>
+</section>
+
+<p class="foot">Directions can borrow from each other — e.g. Thread's readability with Manuscript's margin note as the coach's <span style="font-style:normal;" class="serif">first</span> beat. And in all three: the full Coaching Room becomes redundant. This is the coaching.</p>
+
+<script>
+const COACHES = [
+  { t:'provocateur', name:'The Provocateur', title:'Makes it bigger', color:'#EB3F43', ini:'P' },
+  { t:'sharpener', name:'The Sharpener', title:'Holds it to the brief', color:'#231F20', ini:'S' },
+  { t:'fan_lens', name:'The Audience Lens', title:'Speaks for the audience', color:'#D97A85', ini:'A' },
+  { t:'rights_advisor', name:'The Guidelines Advisor', title:'Checks the guardrails', color:'#24298F', ini:'G' },
+];
+const REPLY = "Take the version you're holding and ask what it looks like with ten times the nerve. Right now this idea behaves politely — it asks the agency's permission. Rewrite the first line so it makes a claim the smugness in the building has to answer, then keep every tooth when the edits come.";
+function mono(c, size){ return `<div class="coachmono" style="width:${size}px;height:${size}px;background:${c.color};font-size:${size*.5}px;border:1px solid rgba(255,255,255,.25)">${c.ini}</div>`; }
+function typeInto(el, text, cb){ el.innerHTML=''; let i=0; const cur=document.createElement('span'); cur.className='cursor'; el.appendChild(cur); const iv=setInterval(()=>{ const words=text.split(' '); if(i>=words.length){clearInterval(iv);cur.remove();cb&&cb();return;} cur.insertAdjacentText('beforebegin', (i?' ':'')+words[i]); i++; }, 22); }
+
+// OPTION 1 — masthead grid → typed page
+function s1(){
+  const h=document.getElementById('s1h'), b=document.getElementById('s1body');
+  b.innerHTML = `<p style="color:#a8a5a6;font-size:14px;line-height:1.6;margin-bottom:20px;max-width:440px">Pick a coach to push this idea — each already knows your category brief.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="s1grid"></div>`;
+  const g=document.getElementById('s1grid');
+  COACHES.forEach(c=>{ const el=document.createElement('div'); el.style.cssText='display:flex;align-items:center;gap:14px;padding:14px;background:#232227;border-left:3px solid '+c.color+';cursor:pointer'; el.innerHTML=mono(c,44)+`<div><div class="serif" style="font-size:17px">${c.name}</div><div class="serif" style="font-style:italic;font-size:12px;color:#8a8689">${c.title}</div></div>`; el.onclick=()=>chooseS1(c); g.appendChild(el); });
+}
+function chooseS1(c){
+  const h=document.getElementById('s1h'), b=document.getElementById('s1body');
+  h.innerHTML=`<span style="display:flex;align-items:center;gap:12px">${c.name}<span class="wave"><span style="background:${c.color};animation-delay:0s"></span><span style="background:${c.color};animation-delay:.15s"></span><span style="background:${c.color};animation-delay:.3s"></span></span></span>`;
+  b.innerHTML=`<div style="background:#FDFCFB;color:#231f20;padding:24px 26px;max-width:94%"><div class="slug" style="color:${c.color};margin-bottom:14px">${c.name} · Round 01</div><p class="mono" id="s1typed" style="font-size:14px;line-height:1.75"></p></div>`;
+  typeInto(document.getElementById('s1typed'), REPLY);
+}
+
+// OPTION 2 — coach row → thread
+function s2(){
+  const b=document.getElementById('s2body');
+  b.innerHTML=`<div style="padding:26px 0 8px"><div class="slug" style="color:#8a8689;margin-bottom:14px">Choose a coach</div><div style="display:flex;gap:10px;flex-wrap:wrap" id="s2row"></div></div>`;
+  const r=document.getElementById('s2row');
+  COACHES.forEach(c=>{ const el=document.createElement('div'); el.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border:1px solid rgba(255,255,255,.14);cursor:pointer'; el.innerHTML=mono(c,34)+`<span class="serif" style="font-size:15px">${c.name}</span>`; el.onclick=()=>chooseS2(c); r.appendChild(el); });
+}
+function chooseS2(c){
+  const b=document.getElementById('s2body');
+  b.innerHTML=`<div style="margin-top:24px;background:#FDFCFB;color:#231f20;padding:26px 28px"><div class="slug" style="color:${c.color};margin-bottom:14px;display:flex;align-items:center;gap:10px">${c.name} · Round 01 <span class="wave"><span style="background:${c.color}"></span><span style="background:${c.color};animation-delay:.15s"></span><span style="background:${c.color};animation-delay:.3s"></span></span></div><p class="mono" id="s2typed" style="font-size:14.5px;line-height:1.8"></p></div>`;
+  typeInto(document.getElementById('s2typed'), REPLY);
+}
+
+// OPTION 3 — dock → margin note
+function s3(){
+  const d=document.getElementById('s3dock');
+  COACHES.forEach(c=>{ const el=document.createElement('div'); el.style.cssText='cursor:pointer'; el.title=c.name; el.innerHTML=mono(c,48); el.onclick=()=>chooseS3(c); d.appendChild(el); });
+}
+function chooseS3(c){
+  const n=document.getElementById('s3note');
+  n.style.borderLeftColor=c.color;
+  n.innerHTML=`<div class="slug" style="color:${c.color};margin-bottom:14px">${c.name}</div><p class="mono" id="s3typed" style="font-size:13px;line-height:1.7;color:#e6e4e5"></p>`;
+  typeInto(document.getElementById('s3typed'), REPLY);
+}
+
+s1(); s2(); s3();
+</script>

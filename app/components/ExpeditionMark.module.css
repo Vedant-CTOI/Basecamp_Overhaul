@@ -1,0 +1,36 @@
+.mark {
+  position: relative;
+  width: min(34vw, 430px);
+  height: min(32vw, 405px);
+  cursor: grab;
+  touch-action: pan-y;
+  isolation: isolate;
+}
+
+.mark::before {
+  content: "";
+  position: absolute;
+  inset: 43% 6% 4%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--brand-primary-a24), transparent 68%);
+  filter: blur(22px);
+}
+
+.mark:active {
+  cursor: grabbing;
+}
+
+.mark canvas,
+.fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 760px) {
+  .mark {
+    width: min(90vw, 420px);
+    height: min(75vw, 350px);
+  }
+}

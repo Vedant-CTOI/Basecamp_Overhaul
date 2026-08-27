@@ -1,0 +1,814 @@
+@import "tailwindcss";
+
+/* ============================================================
+   OGILVY SHOWCASE EDITION — design tokens
+   Contract: docs/ogilvy-showcase-direction.md
+   Red is the voice, not the wallpaper. Motion is an event, never
+   a texture. Type does the identity work.
+   ============================================================ */
+
+@theme inline {
+  /* ── Brand tokens: NO HEX HERE ──
+     Every brand color references the `--brand-*` custom properties that
+     app/layout.tsx injects from lib/config.ts BRAND.colors. The config
+     is the single definition site; this block only names the tokens the
+     CSS side consumes. Non-brand values (foreground steps, text ramp,
+     borders) are CSS-side tuning and keep their literals. */
+
+  /* ── Registers ── */
+  --color-background: var(--brand-surface-0); /* warm cream stage (overhaul) */
+  --color-foreground: #2C2419;
+  --color-surface: var(--brand-surface-1);
+  --color-surface-raised: var(--brand-surface-2);
+  --color-surface-light: var(--brand-surface-3);
+  --color-surface-lighter: #EDE6DC;
+  --color-surface-lightest: #FBF8F3;
+
+  /* ── Brand ── */
+  --color-red: var(--brand-primary);
+  --color-red-bright: var(--brand-primary-bright);
+  --color-red-dim: var(--brand-primary-dim);
+  --color-ink: var(--brand-ink);
+  --color-paper: var(--brand-paper);
+  --color-paper-dim: var(--brand-paper-dim);
+  --color-pink: var(--brand-pink);
+  --color-blue: var(--brand-blue);
+
+  /* ── Text on dark ── */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a8a5a6;
+  --color-text-tertiary: #6e6a6c;
+  --color-text-muted: #4a4749;
+
+  /* ── Borders ── */
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-light: rgba(255, 255, 255, 0.14);
+
+  /* ── Typography ── */
+  --font-mono: var(--font-courier-prime), "Courier New", monospace;
+}
+
+/* ============================================================
+   THE ROOM SCALE — this design responds UPWARD, not just downward
+   ============================================================
+   Settled 2026-08-06 (user ruling, after the board was shared from a
+   very large screen and "everything was very small").
+
+   Breakpoints solved the narrow end and nothing solved the wide end.
+   Every size in this system is a fixed px value, so above the laptop
+   the composition kept its measurements while the glass grew, and it
+   failed in TWO directions at once. Measured on the Board before this
+   rule, at a 19px card body:
+
+     width   apparent body   chars/line
+     1440    19px            41
+     1920    19px            58
+     2560    19px            80
+     3840    19px            125
+
+   The type never grew — as a fraction of the screen it shrank from
+   1.32% to 0.50%, so it is 2.7x smaller to the viewer at 4K — AND the
+   line length ran to 125 characters, far past the ~65-75 where the eye
+   can still find the next line. Wider cards, same tiny words, unreadable
+   measure.
+
+   THE FIX IS TO SCALE THE COMPOSITION, NOT TO REFLOW IT. A big screen
+   in a room is not more space for more content; it is the same content
+   seen from further away. So above the 1600px baseline the whole page
+   scales as one — type, spacing, prints, cards together — and the
+   column count, the masonry law and every proportion stay exactly as
+   designed. Measured after:
+
+     width   zoom   apparent body   chars/line
+     1440    1.00   19px            41
+     1920    1.20   22.8px          47
+     2560    1.60   30.4px          47
+     3840    2.40   45.6px          47
+
+   Chars-per-line LOCKS at 47 and apparent size tracks the viewer's
+   distance. Verified under scale: no horizontal overflow, the fixed
+   wire still spans the full width flush to the bottom, and modals stay
+   centred and inside the viewport at 2560 and 3840.
+
+   `calc(100vw / 1600px)` — the px divisor is required. Dividing by a
+   bare number yields a length, which `zoom` rejects, and it silently
+   falls back to 1 (this is exactly how the first attempt failed).
+
+   Below 1600 this is a no-op, which is why every harness width
+   (1280 / 1440 / 1600) measures precisely what it did before.
+
+   SCROLLING SURFACES ONLY — AND THAT IS THE WHOLE SUBTLETY. This was
+   first applied to `body`, and the harness caught it at 1920: the
+   Stage's Control Strip landed at bottom 1296 of a 1080 screen, and
+   the ballot stopped fitting. Scaling multiplies a viewport-locked
+   layout too, so a `h-screen` surface becomes 1.2x TALLER than the
+   screen it is locked to and the room has to scroll for something the
+   law says it must never scroll for.
+
+   The rule that falls out of it, and the one to apply to any new
+   surface:
+     `min-h-screen` — a SCROLLING DOCUMENT (the Board, the Newsroom,
+        the Edition). It already grows past the fold, so scaling only
+        changes how much fits above it. SCALE THESE.
+     `h-screen` — VIEWPORT-LOCKED (the Stage). It is built to fit one
+        screen exactly and already auto-fits its own field, so it is
+        adaptive by construction and scaling can only break it.
+        NEVER SCALE THESE.
+
+   FOUNDATION, NOT CONFIG. No engagement wants this different — it is
+   readability at a distance, the same physics for every client — so it
+   is ruled once here rather than exposed as a dial. */
+.room-scale {
+  zoom: clamp(1, calc(100vw / 1600px), 2.4);
+}
+
+/* ── The viewport-locked half of the same problem ──
+   `.room-scale` answers the SCROLLING surfaces. A locked surface —
+   team select — has the same disease and cannot take the same cure:
+   it is `h-screen`, so scaling the container overflows the screen it
+   is locked to, which is exactly how the Stage broke.
+
+   It is also not self-fitting the way the Stage is. Its composition is
+   a 320px drum, a fixed headline and fixed gaps drawn for a 1440x810
+   room — geometry inherited unchanged from the Coke build, which
+   carries no vh, vw, clamp or resize handler anywhere on that surface.
+   Measured before this rule, the drum held 52.7% of screen height at
+   1440 and 19.8% at 4K: three circles adrift in black.
+
+   TWO FAILED ATTEMPTS ARE WORTH RECORDING, because each names a trap.
+   Scaling the DRUM alone measured perfectly — a constant 52.7% at
+   every width — and looked wrong: the headline and its spacing stayed
+   put, so the grown drum climbed through "Choose your team." Scaling
+   one element of a composition is not scaling the composition. Then
+   scaling the section's children failed silently, because they are
+   Framer Motion elements and Framer writes `transform` inline, which
+   beats a stylesheet.
+
+   So the scale sits on the plain wrapper that holds the whole picture,
+   where it composes with the children's animations instead of fighting
+   them. `transform`, not `zoom`: it does not reflow, so a locked
+   layout cannot grow past its lock, and the section's own
+   `overflow-hidden` is the backstop. The ratio is how much taller the
+   room is than the 810px the composition was drawn for. */
+.room-fit {
+  transform: scale(clamp(1, calc(100vh / 810px), 2.6));
+  transform-origin: center center;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-ogilvy-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* No orphaned words: pretty on running text, balance on headings */
+p, li, blockquote, dd, figcaption {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* ── Type voices ── */
+/* Display = Ogilvy Serif (the identity). Was Bebas Neue. */
+.font-display {
+  font-family: var(--font-ogilvy-serif), Georgia, "Times New Roman", serif;
+  letter-spacing: 0;
+}
+/* No condensed face in the Ogilvy system — resolves to Sans Bold. */
+.font-condensed {
+  font-family: var(--font-ogilvy-sans), "Helvetica Neue", sans-serif;
+  font-weight: 700;
+}
+.font-mono {
+  /* NOT var(--font-mono): @theme inline emits no :root custom property,
+     so that var is invalid at computed-value time and the copy-deck
+     voice silently inherited Ogilvy Sans. Reference the next/font
+     variable directly. */
+  font-family: var(--font-courier-prime), "Courier New", monospace;
+}
+.font-serif {
+  font-family: var(--font-ogilvy-serif), Georgia, serif;
+}
+
+/* Numbers that tick or align in columns */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Signature: the Kruger bar (one per screen, max) ── */
+.kruger-bar {
+  background: var(--color-red);
+  color: #fff;
+  font-family: var(--font-ogilvy-sans), sans-serif;
+  font-weight: 700;
+}
+
+/* ── Signature: the coupon (room-code entry, direct-response style) ── */
+.coupon-box {
+  border: 2px dashed var(--color-red);
+  background: transparent;
+}
+
+/* ── Signature: production slug (true data only) ── */
+.slug {
+  /* Direct next/font var — see .font-mono note. */
+  font-family: var(--font-courier-prime), "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Signature: rubber stamp state (applied only when the state is real) ── */
+.stamp {
+  display: inline-block;
+  border: 1.5px solid currentColor;
+  padding: 1px 7px;
+  font-family: var(--font-ogilvy-sans), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-1.2deg);
+  border-radius: 2px;
+}
+
+/* ── Hairline rules (editorial) ── */
+.rule-ink { border-color: rgba(35, 31, 32, 0.25); }
+.rule-white { border-color: rgba(255, 255, 255, 0.18); }
+
+/* ── Team select panel entrance ── */
+@keyframes panel-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.panel-reveal {
+  animation: panel-fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Team select panel hover states (kept for medallion ring compat) ── */
+.panel-active video { opacity: 1 !important; }
+.panel-active .panel-team-bg { filter: saturate(0.8) brightness(0.7) !important; opacity: 0.6 !important; }
+.panel-active .panel-color-wash { opacity: 0.35 !important; }
+.panel-active .panel-dark-overlay { opacity: 0.45 !important; }
+.panel-active .panel-accent-top { opacity: 1 !important; }
+.panel-active .panel-playing-badge { opacity: 1 !important; }
+.panel-active .panel-dunk-name { transform: scale(1.08) !important; transform-origin: left center; }
+.panel-active .panel-group-label,
+.panel-active .panel-pillars-label {
+  opacity: 1 !important; transform: translateY(0) !important;
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s !important;
+}
+.panel-active .panel-cta-btn {
+  opacity: 1 !important; transform: translateY(0) !important;
+  transition: opacity 0.3s ease 0.2s, transform 0.3s ease 0.2s !important;
+}
+
+/* ── noise-bg: retired (no ambient texture in the Ogilvy edition) ── */
+.noise-bg { position: relative; }
+
+/* ── Legacy shimmer classes: resolve to static red (no gradient text) ── */
+.green-shimmer,
+.yellow-shimmer {
+  color: var(--color-red);
+}
+
+/* ── Legacy glow classes: neutralized (motion is an event, not a texture) ── */
+.pulse-glow { box-shadow: none; }
+.title-glow { text-shadow: none; }
+.coached-badge { opacity: 1; }
+.ambient-glow { position: relative; }
+.ambient-glow::before { content: none; }
+
+/* ── Live pulse indicator (the one heartbeat) ── */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.live-pulse {
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Number flip (results tick) ── */
+@keyframes flip-in {
+  0% { transform: translateY(100%) scaleY(0.6); opacity: 0; }
+  60% { transform: translateY(-5%) scaleY(1.02); opacity: 1; }
+  100% { transform: translateY(0) scaleY(1); opacity: 1; }
+}
+.flip-number {
+  animation: flip-in 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ── glass-card: redefined as solid editorial card (no blur, no glass) ── */
+.glass-card {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+}
+.glass-card:hover {
+  background: var(--color-surface-light);
+  border-color: var(--color-border-light);
+}
+
+/* ── China-marker stroke draw-on (applied to SVG paths) ── */
+@keyframes marker-draw {
+  from { stroke-dashoffset: var(--marker-length, 400); }
+  to { stroke-dashoffset: 0; }
+}
+.marker-draw {
+  stroke-dasharray: var(--marker-length, 400);
+  animation: marker-draw 0.3s ease-out forwards;
+}
+
+/* ── Vision prose (rendered markdown in Shortlist view) ── */
+.vision-prose p { margin-bottom: 1em; }
+.vision-prose p:last-child { margin-bottom: 0; }
+.vision-prose strong { color: #fff; font-weight: 700; }
+.vision-prose em { font-style: italic; color: rgba(255,255,255,0.7); }
+
+/* ── Legacy overlay classes: retired, kept as no-ops ── */
+.scanline-overlay::before { content: none; }
+.halftone-overlay::before { content: none; }
+
+/* ── Accent divider (editorial hairline, red fade) ── */
+.accent-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-red) 0%, var(--brand-primary-a20) 40%, transparent 100%);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3a393d; border-radius: 5px; }
+
+/* ── Ticker ── */
+:root {
+  --ticker-gap: 60px;
+}
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - var(--ticker-gap) / 2)); }
+}
+.ticker-animate {
+  animation: ticker-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+/* ── Entrance stagger helpers ── */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+/* ============================================================
+   ROUND 2 — the Ogilvy ethos / ambience layer
+   Contract: docs/ogilvy-showcase-direction.md, "Round 2"
+   ============================================================ */
+
+/* ── Halftone materiality (print-dot, replaces generic noise) ── */
+.halftone-paper { position: relative; }
+.halftone-paper::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(35, 31, 32, 0.022) 1px, transparent 1px);
+  background-size: 6px 6px;
+  pointer-events: none;
+  z-index: 0;
+}
+.halftone-dark { position: relative; }
+.halftone-dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 5px 5px;
+  pointer-events: none;
+  z-index: 0;
+}
+.halftone-band { position: relative; }
+.halftone-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+/* ── Horizon warmth (stage light, never behind body text) ── */
+.horizon-glow { position: relative; }
+.horizon-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 45% at 50% 108%, var(--brand-primary-a16), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── The highlighter bar (one per surface, max) ── */
+.highlight-bar {
+  background: var(--color-red);
+  color: #fff;
+  padding: 0 0.18em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.highlight-bar-blue { background: #24298F; color: #fff; padding: 0 0.18em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.highlight-bar-chartreuse { background: #D6D972; color: #231F20; padding: 0 0.18em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+/* ── Tartan bands (heritage texture, static) ── */
+.tartan-band {
+  background-image: url("/textures/tartan.svg");
+  background-size: 96px 96px;
+}
+
+/* ── Type-as-texture (oversized cropped serif letterforms) ── */
+.type-texture {
+  position: absolute;
+  font-family: var(--font-ogilvy-serif), Georgia, serif;
+  font-style: italic;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ── Selection: the accent at half alpha (matches ogilvy.com) ── */
+::selection {
+  background: var(--brand-primary-a50);
+  color: #fff;
+}
+
+/* ── Orbital Core entry ── */
+@keyframes orbital-rotate {
+  to { transform: rotate(360deg); }
+}
+.orbital-rotate {
+  animation: orbital-rotate 52s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbital-rotate {
+    animation-play-state: paused;
+  }
+}
+
+/* ── Editable manuscript affordance (coaching takeover) ── */
+.edit-field { caret-color: var(--color-red); border-radius: 2px; transition: background 0.15s ease; padding: 2px 6px; margin: -2px -6px; }
+.edit-field:hover { background: rgba(35,31,32,0.035); }
+.edit-field:focus { background: rgba(35,31,32,0.05); }
+
+/* ── Operator Console fields (theater-dark register) ──
+   An input on the dark ground needs an edge you can see and a focus
+   state that is not the browser's. The console sets `focus:outline-none`
+   on every field and, on paper, put nothing behind it; on this ground
+   that is a field you cannot tell you are standing in. The edge
+   brightens and a second inset line lands, so focus is a change in
+   WEIGHT rather than a colour this register has already spent. */
+.console-field { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.console-field:focus {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+.console-field::placeholder { color: rgba(255, 255, 255, 0.46); }
+
+/* ── Dove Real Intelligence: the animated brand mark ─────────────
+   Two wing states cross-fade on a loop; a slow drift floats the whole
+   bird. Reduced motion collapses to the static mark. */
+@keyframes dove-wing-up {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes dove-drift {
+  0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+  30% { transform: translate(2px, -4px) rotate(1deg); }
+  60% { transform: translate(-2px, -2px) rotate(0deg); }
+}
+.dove-mark-drift { animation: dove-drift 9s ease-in-out infinite; }
+.dove-mark-drift .dove-wing-a { animation: dove-wing-up 0.9s ease-in-out infinite; }
+.dove-mark-drift .dove-wing-b { animation: dove-wing-up 0.9s ease-in-out infinite reverse; }
+@media (prefers-reduced-motion: reduce) {
+  .dove-mark-drift, .dove-mark-drift .dove-wing-a { animation: none !important; }
+  .dove-mark-drift .dove-wing-b { display: none; }
+}
+
+/* The Honest Feed — real vs synthetic squares drifting left forever. */
+@keyframes honest-feed-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-168px); } /* 12 squares * (8px + 6px gap) */
+}
+.honest-feed-strip {
+  width: max-content;
+  animation: honest-feed-scroll 14s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .honest-feed-strip { animation: none; }
+}
+
+/* ── Dove UI: the making pocket ───────────────────────────────
+   Recessed dashed pocket that fills with brand light on hover;
+   the plus rotates a quarter-turn and turns gold. */
+.add-pocket {
+  border: 1.5px dashed rgba(48,51,52,0.25);
+  border-radius: 14px;
+  background: rgba(48,51,52,0.02);
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+}
+.add-pocket:hover {
+  border-color: #B78938;
+  border-style: solid;
+  background: rgba(183,137,56,0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(183,137,56,0.12);
+  color: #303334 !important;
+}
+.add-plus {
+  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), color 0.25s ease;
+}
+.add-pocket:hover .add-plus {
+  transform: rotate(90deg);
+  color: #B78938;
+}
+@media (prefers-reduced-motion: reduce) {
+  .add-pocket, .add-plus { transition: none; }
+}
+
+/* ── Dove UI: the idea card ───────────────────────────────────
+   Hover lifts the card and draws a gold hairline across the top —
+   a quiet "this one?" signal. Shortlisted cards keep their navy
+   frame (stronger signal wins). */
+.idea-card {
+  transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s cubic-bezier(0.22,1,0.36,1), border-color 0.2s ease;
+  position: relative;
+}
+.idea-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 12px; right: 12px;
+  height: 2px;
+  background: #B78938;
+  border-radius: 0 0 2px 2px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  pointer-events: none;
+}
+.idea-card:hover {
+  box-shadow: 0 14px 34px rgba(0,38,99,0.12), 0 2px 8px rgba(0,38,99,0.08);
+}
+.idea-card:hover::before {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .idea-card, .idea-card::before { transition: none; }
+  .idea-card:hover { transform: none; }
+}
+
+/* ── Dove UI: the nav link ────────────────────────────────────
+   Header destinations become pill targets: hover fills a soft
+   navy wash, active pages carry the filled pill. */
+.dove-nav {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: background 0.22s cubic-bezier(0.22,1,0.36,1), color 0.22s ease;
+}
+.dove-nav:hover { background: rgba(0,38,99,0.08); }
+.dove-nav-dark { color: rgba(255,255,255,0.6); }
+.dove-nav-dark:hover { background: rgba(255,255,255,0.1); color: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .dove-nav { transition: none; }
+}
+
+/* ── Dove UI: the modal ─────────────────────────────────────── */
+.dove-modal {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(6,8,15,0.28), 0 4px 16px rgba(6,8,15,0.12);
+}
+.dove-modal::after {
+  /* gold hairline across the panel top */
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #B78938, #DABF80 55%, rgba(218,191,128,0.15));
+  pointer-events: none;
+}
+.dove-modal-hairline { display: none; } /* superseded by ::after */
+.dove-modal input,
+.dove-modal textarea {
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dove-modal input:focus,
+.dove-modal textarea:focus {
+  border-color: #B78938 !important;
+  box-shadow: 0 0 0 3px rgba(183,137,56,0.14);
+}
+.dove-modal-cancel {
+  background: transparent;
+  border: 1.5px solid rgba(48,51,52,0.28);
+  color: #303334;
+  border-radius: 999px;
+  transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
+}
+.dove-modal-cancel:hover {
+  border-color: #303334;
+  background: rgba(48,51,52,0.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dove-modal, .dove-modal input, .dove-modal textarea, .dove-modal-cancel { transition: none; }
+}
+
+/* Expanded idea panel — same panel family as AddIdeaModal but keeps
+   its team-color edge (identity); rounded 18 + dove shadow. */
+.dove-modal-panel {
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(6,8,15,0.3), 0 6px 20px rgba(6,8,15,0.14);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dove-modal-panel { transition: none; }
+}
+
+/* Dove input — rounded with gold focus ring (shared: quick-add, future forms) */
+.dove-input {
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dove-input:focus {
+  border-color: #B78938 !important;
+  box-shadow: 0 0 0 3px rgba(183,137,56,0.14);
+}
+
+/* Dove coach card — lifts toward you, gold edge glow on hover */
+.coach-card {
+  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.coach-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,38,99,0.12);
+  border-color: rgba(183,137,56,0.5) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .coach-card { transition: none; }
+}
+
+
+/* ============================================================
+   BASECAMP OVERHAUL — "Soft Maximalism" design system
+   ============================================================
+   Register: warm, tactile, dimensional. Cream + clay grounds,
+   neumorphic dual shadows, oversized editorial serif, liquid
+   organic accent blobs. The inverse of v1's dark navy editorial.
+   Brand anchors kept: Dove blue #002663, gold #B78938 family.
+   ============================================================ */
+:root {
+  /* Grounds — warm light world */
+  --g0: #F3EEE7;          /* page cream */
+  --g1: #EDE6DC;          /* raised section */
+  --g2: #E4DCCF;          /* pressed/inset */
+  --card: #FBF8F3;        /* card surface */
+
+  /* Ink — warmer than v1 */
+  --ink: #2C2419;
+  --ink-soft: #6B5D4A;
+  --ink-faint: #A79780;
+
+  /* Brand, tuned for cream */
+  --dove-blue: #002663;
+  --blue-rich: #0A3478;
+  --blue-soft: #366AA5;
+  --gold: #B78938;
+  --gold-light: #DABF80;
+  --gold-pale: #F0DFB8;
+  --clay: #C4756B;        /* new warm accent for contrast */
+  --sage: #7E8F6E;        /* calm supporting green */
+
+  /* Neumorphic shadow pairs (light source top-left) */
+  --neo-raised: 8px 8px 20px rgba(166,146,116,0.28), -8px -8px 20px rgba(255,255,255,0.85);
+  --neo-raised-sm: 4px 4px 10px rgba(166,146,116,0.25), -4px -4px 10px rgba(255,255,255,0.8);
+  --neo-inset: inset 5px 5px 12px rgba(166,146,116,0.22), inset -5px -5px 12px rgba(255,255,255,0.85);
+  --neo-inset-sm: inset 3px 3px 7px rgba(166,146,116,0.2), inset -3px -3px 7px rgba(255,255,255,0.8);
+
+  /* Type scale — oversized editorial */
+  --font-display-xl: clamp(56px, 9vw, 140px);
+  --font-display-lg: clamp(36px, 5.5vw, 76px);
+  --font-display-md: clamp(26px, 3.5vw, 44px);
+
+  /* Motion */
+  --ease-fluid: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ── Overhaul kit: soft components ─────────────────────────── */
+.soft-btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--neo-raised-sm);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-fluid);
+}
+.soft-btn:disabled { opacity: 0.4; cursor: default; }
+.soft-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--g1);
+  box-shadow: var(--neo-inset-sm);
+}
+.soft-tab {
+  position: relative;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+.soft-tab.is-active { color: #002663; }
+.soft-tab-knob {
+  position: absolute; inset: 0;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--neo-raised-sm);
+}
+.soft-count {
+  display: inline-grid; place-items: center;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(0,38,99,0.08);
+  font-size: 10px; font-weight: 800;
+}
+.is-active .soft-count { background: rgba(0,38,99,0.14); color: #002663; }
+.soft-card {
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: var(--neo-raised);
+  transition: box-shadow 0.35s var(--ease-fluid), transform 0.35s var(--ease-fluid);
+}
+.soft-card:hover { box-shadow: 10px 14px 34px rgba(166,146,116,0.36), -8px -8px 24px rgba(255,255,255,0.9); }
+.liquid-blob { will-change: transform; }
+
+/* Page ground for the overhaul */
+.overhaul-page {
+  background:
+    radial-gradient(ellipse 60% 40% at 85% -5%, rgba(218,191,128,0.18), transparent),
+    radial-gradient(ellipse 50% 45% at -5% 100%, rgba(54,106,165,0.1), transparent),
+    var(--g0);
+  color: var(--ink);
+}
+
+/* ── OVERHAUL REGISTER FLIP ───────────────────────────────────
+   The v1 surfaces styled white text against brand-dark grounds.
+   The overhaul world is cream; this layer re-maps the common
+   literal colors WITHOUT touching component logic. Scoped to
+   .overhaul-page (applied at each surface root). */
+.overhaul-page { color: var(--ink); }
+.overhaul-page [style*="color: #fff"],
+.overhaul-page [style*="color:#fff"],
+.overhaul-page [style*="color: white"] { color: var(--ink) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.9)"] { color: var(--ink) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.8)"] { color: var(--ink-soft) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.7)"] { color: var(--ink-soft) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.6)"] { color: var(--ink-soft) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.5)"] { color: var(--ink-faint) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.45)"] { color: var(--ink-faint) !important; }
+.overhaul-page [style*="rgba(255,255,255,0.4)"] { color: var(--ink-faint) !important; }
+/* backgrounds: dark stage cards → raised cream */
+.overhaul-page [style*="background: #0A0A0C"],
+.overhaul-page [style*="background: '#0A0A0C'"],
+.overhaul-page [style*="#06080F"],
+.overhaul-page [style*="#101623"],
+.overhaul-page [style*="#182033"],
+.overhaul-page [style*="#20293E"] {
+  background: var(--card) !important;
+}
+/* borders on dark → warm hairlines */
+.overhaul-page [style*="rgba(255,255,255,0.14)"],
+.overhaul-page [style*="rgba(255,255,255,0.2)"] {
+  border-color: rgba(107,93,74,0.25) !important;
+}

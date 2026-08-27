@@ -1,0 +1,95 @@
+<style>
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-RegularItalic.woff2') format('woff2'); font-weight: 400; font-style: italic; }
+@font-face { font-family: 'OgSerif'; src: url('/fonts/OgilvySerifWeb-Bold.woff2') format('woff2'); font-weight: 700; }
+@font-face { font-family: 'OgSans'; src: url('/fonts/OgilvySansWeb-Regular.woff2') format('woff2'); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#1B1A1D; color:#f4f3f2; font-family:'OgSans',sans-serif; padding:44px 40px 100px; }
+h1 { font-family:'OgSerif',Georgia,serif; font-size:32px; margin-bottom:6px; }
+.sub { color:#8a8689; font-size:15px; margin-bottom:40px; max-width:660px; line-height:1.5; }
+.row { display:grid; grid-template-columns:180px repeat(4,1fr); gap:0; align-items:center; border-top:1px solid rgba(255,255,255,.1); padding:26px 0; }
+.rowhead { }
+.rowname { font-family:'OgSerif',serif; font-size:21px; }
+.rowdesc { color:#8a8689; font-size:13px; font-style:italic; font-family:'OgSerif',serif; margin-top:2px; }
+.cell { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.label { font-family:'Courier New',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#6e6a6c; }
+.colhead { display:grid; grid-template-columns:180px repeat(4,1fr); gap:0; padding-bottom:8px; }
+.colhead div { text-align:center; font-family:'Courier New',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#EB3F43; }
+.colhead div:first-child { text-align:left; }
+.note { color:#8a8689; font-size:14px; font-style:italic; font-family:'OgSerif',serif; margin-top:36px; border-top:1px solid rgba(255,255,255,.08); padding-top:20px; line-height:1.6; }
+</style>
+
+<h1>Coach marks — four treatments</h1>
+<p class="sub">The current flat letter beside three crafted directions, all keyless SVG. A fifth path — illustrated character portraits — is warmer but needs image generation; see the note below.</p>
+
+<div class="colhead">
+  <div>Coach</div><div>01 · Current</div><div>02 · The Seal</div><div>03 · The Medallion</div><div>04 · Editorial Mark</div>
+</div>
+
+<div id="rows"></div>
+
+<p class="note">My read: <b style="font-style:normal;color:#f4f3f2">The Seal</b> is the strongest keyless option — it turns each coach into an official department stamp (engraved ring, embossed letter), which fits the advertising-production world without pretending to be a face. <b style="font-style:normal;color:#f4f3f2">The Medallion</b> is more premium but reads a touch corporate. If you want genuinely <span style="font-style:normal">friendly</span>, that's illustrated character portraits — I'd cast each coach as a person (the Provocateur as a sharp-eyed provocateur, the Audience Lens as a warm observer, etc.), generate a consistent set via Gemini in a duotone/editorial style so they still belong to this world. That path needs your API key.</p>
+
+<script>
+const COACHES = [
+  { name:'The Provocateur', title:'Makes it bigger', c:'#EB3F43', ini:'P' },
+  { name:'The Sharpener', title:'Holds it to the brief', c:'#231F20', ini:'S' },
+  { name:'The Audience Lens', title:'Speaks for the audience', c:'#D97A85', ini:'A' },
+  { name:'The Guidelines Advisor', title:'Checks the guardrails', c:'#24298F', ini:'G' },
+];
+function inkText(hex){ const n=parseInt(hex.slice(1),16); const y=((n>>16&255)*299+(n>>8&255)*587+(n&255)*114)/1000; return y>128?'#231F20':'#FFFFFF'; }
+function lighten(hex,k){ const n=parseInt(hex.slice(1),16); const m=v=>Math.round(v+(255-v)*k); return `rgb(${m(n>>16&255)},${m(n>>8&255)},${m(n&255)})`; }
+function darken(hex,k){ const n=parseInt(hex.slice(1),16); const m=v=>Math.round(v*(1-k)); return `rgb(${m(n>>16&255)},${m(n>>8&255)},${m(n&255)})`; }
+
+// 01 — current flat
+function flat(c){ const t=inkText(c.c); return `<svg width="88" height="88" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" fill="${c.c}"/><circle cx="100" cy="100" r="88" fill="none" stroke="${t==='#FFFFFF'?'rgba(255,255,255,.3)':'rgba(35,31,32,.3)'}" stroke-width="1.5"/><text x="100" y="138" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="110" fill="${t}">${c.ini}</text></svg>`; }
+
+// 02 — the seal: engraved outer ring + radial ticks + embossed letter
+function seal(c){
+  const t=inkText(c.c), edge=darken(c.c,0.3), hi=lighten(c.c,0.25);
+  let ticks=''; for(let i=0;i<48;i++){ const a=i/48*Math.PI*2; const r1=90,r2=95; ticks+=`<line x1="${100+Math.cos(a)*r1}" y1="${100+Math.sin(a)*r1}" x2="${100+Math.cos(a)*r2}" y2="${100+Math.sin(a)*r2}" stroke="${t==='#FFFFFF'?'rgba(255,255,255,.35)':'rgba(35,31,32,.35)'}" stroke-width="1.4"/>`; }
+  return `<svg width="88" height="88" viewBox="0 0 200 200">
+    <defs><radialGradient id="sg${c.ini}" cx="42%" cy="36%" r="75%"><stop offset="0%" stop-color="${hi}"/><stop offset="70%" stop-color="${c.c}"/><stop offset="100%" stop-color="${edge}"/></radialGradient></defs>
+    <circle cx="100" cy="100" r="99" fill="url(#sg${c.ini})"/>
+    ${ticks}
+    <circle cx="100" cy="100" r="82" fill="none" stroke="${t==='#FFFFFF'?'rgba(255,255,255,.4)':'rgba(35,31,32,.4)'}" stroke-width="1.2"/>
+    <text x="100" y="139" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="104" fill="${darken(c.c,0.45)}" opacity="0.5" transform="translate(0,2.5)">${c.ini}</text>
+    <text x="100" y="139" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="104" fill="${t}">${c.ini}</text>
+  </svg>`;
+}
+
+// 03 — the medallion: beveled metallic coin, engraved letter
+function medallion(c){
+  const t=inkText(c.c), edge=darken(c.c,0.4), hi=lighten(c.c,0.4);
+  return `<svg width="88" height="88" viewBox="0 0 200 200">
+    <defs><linearGradient id="mg${c.ini}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${hi}"/><stop offset="50%" stop-color="${c.c}"/><stop offset="100%" stop-color="${edge}"/></linearGradient>
+    <linearGradient id="mr${c.ini}" x1="1" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="${hi}"/><stop offset="100%" stop-color="${edge}"/></linearGradient></defs>
+    <circle cx="100" cy="100" r="99" fill="url(#mr${c.ini})"/>
+    <circle cx="100" cy="100" r="90" fill="url(#mg${c.ini})"/>
+    <text x="100" y="138" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="106" fill="${darken(c.c,0.5)}" opacity="0.45" transform="translate(1.5,2)">${c.ini}</text>
+    <text x="100" y="138" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="106" fill="${t}">${c.ini}</text>
+  </svg>`;
+}
+
+// 04 — editorial mark: oversized cropped serif initial, off-center, baseline rule
+function editorial(c){
+  const t=inkText(c.c);
+  return `<svg width="88" height="88" viewBox="0 0 200 200"><clipPath id="cl${c.ini}"><circle cx="100" cy="100" r="99"/></clipPath>
+    <g clip-path="url(#cl${c.ini})">
+      <rect width="200" height="200" fill="${c.c}"/>
+      <text x="118" y="196" text-anchor="middle" font-family="OgSerif,Georgia,serif" font-style="italic" font-size="230" fill="${t}" opacity="0.92">${c.ini}</text>
+      <line x1="20" y1="150" x2="180" y2="150" stroke="${t==='#FFFFFF'?'rgba(255,255,255,.5)':'rgba(35,31,32,.5)'}" stroke-width="2"/>
+    </g>
+    <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+  </svg>`;
+}
+
+document.getElementById('rows').innerHTML = COACHES.map(c=>`
+  <div class="row">
+    <div class="rowhead"><div class="rowname">${c.name}</div><div class="rowdesc">${c.title}</div></div>
+    <div class="cell">${flat(c)}</div>
+    <div class="cell">${seal(c)}</div>
+    <div class="cell">${medallion(c)}</div>
+    <div class="cell">${editorial(c)}</div>
+  </div>`).join('');
+</script>

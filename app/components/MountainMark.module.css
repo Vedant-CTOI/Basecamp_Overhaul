@@ -1,0 +1,45 @@
+.mark {
+  position: relative;
+  width: clamp(158px, 15vw, 204px);
+  height: clamp(122px, 11.8vw, 164px);
+  cursor: grab;
+  touch-action: pan-y;
+  isolation: isolate;
+}
+
+.mark::before {
+  content: "";
+  position: absolute;
+  inset: 24% 5% 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--brand-primary-a24), transparent 69%);
+  filter: blur(18px);
+}
+
+.mark canvas {
+  display: block;
+}
+
+.showcase {
+  width: min(68vw, 560px);
+  height: min(54vw, 440px);
+}
+
+.fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 640px) {
+  .mark {
+    width: 138px;
+    height: 106px;
+  }
+
+  .showcase {
+    width: min(94vw, 430px);
+    height: min(76vw, 345px);
+  }
+}
